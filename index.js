@@ -20,16 +20,29 @@ function toMethods(app, mm) {
   }
 
   function visitor(minimist) {
-    var methods = new VisitArgs();
+    var cli = new VisitArgs();
     function proxy() {
       var argv = minimist.apply(minimist, arguments);
-      methods.visit(app, argv, {toBoolean: true});
+      cli.visit(app, argv, {toBoolean: true});
       return argv;
     }
+
     forward(proxy, minimist);
+    for (var key in cli) {
+      var val = cli[key];
+
+      if (typeof val === 'function') {
+        proxy[key] = (function (v) {
+          return function () {
+            return v.apply(cli, arguments);
+          }
+        }(val));
+      } else {
+        proxy[key] = val;
+      }
+    }
     return proxy;
   }
-
   return visitor;
 }
 
@@ -39,14 +52,14 @@ toMethods.namespace = function(name, app, mm) {
   }
 
   function visitor(minimist) {
-    var methods = new VisitArgs();
+    var cli = new VisitArgs();
     function proxy() {
       var argv = minimist.apply(minimist, arguments);
-      methods.visit(app, argv[name], {toBoolean: true});
+      cli.visit(app, argv[name], {toBoolean: true});
       return argv;
     }
     forward(proxy, minimist);
-    proxy[name] = methods;
+    proxy[name] = cli;
     return proxy;
   }
 
