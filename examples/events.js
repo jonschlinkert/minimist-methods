@@ -1,6 +1,4 @@
-
 var app = require('./app');
-var visit = require('collection-visit');
 
 // turtles...
 var minimist = require('minimist');
@@ -38,4 +36,4 @@ cli(args.length ? args : ['--set=a:b', '--set=c:d', '--get=a', '--del=a', '--set
   alias: {s: 'set'}
 });
 
-console.log(app.cache)
+console.log(app.cache);
