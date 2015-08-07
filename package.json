@@ -1,0 +1,62 @@
+{
+  "name": "minimist-methods",
+  "description": "Map your node.js application's methods to command line arguments parsed by your own instance of minimist.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/jonschlinkert/minimist-methods",
+  "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
+  "repository": "jonschlinkert/minimist-methods",
+  "bugs": {
+    "url": "https://github.com/jonschlinkert/minimist-methods/issues"
+  },
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ],
+  "main": "index.js",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "forward-object": "^0.1.0",
+    "visit-args": "^0.1.0"
+  },
+  "devDependencies": {
+    "collection-visit": "^0.1.1",
+    "data-store": "^0.8.1",
+    "minimist": "^1.1.3",
+    "minimist-events": "^0.2.1",
+    "minimist-expand": "^0.2.0",
+    "mocha": "^2.2.5",
+    "should": "^7.0.2"
+  },
+  "keywords": [
+    "args",
+    "argument",
+    "argv",
+    "cli",
+    "command",
+    "command-line",
+    "commands",
+    "emit",
+    "emitter",
+    "event",
+    "line",
+    "listen",
+    "listener",
+    "minimist",
+    "options",
+    "parse",
+    "parser"
+  ],
+  "verb": {
+    "related": {
+      "list": [
+        "minimist-plugins",
+        "minimist"
+      ]
+    }
+  }
+}
