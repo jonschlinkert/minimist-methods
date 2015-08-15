@@ -8,62 +8,31 @@
 'use strict';
 
 var VisitArgs = require('visit-args').VisitArgs;
-var forward = require('forward-object');
 
-function toMethods(app, mm) {
+function toMethods(app) {
   if (typeof app === 'string') {
     return toMethods.namespace.apply(toMethods, arguments);
   }
-
-  if (typeof mm === 'function') {
-    return visitor(mm);
-  }
-
-  function visitor(minimist) {
-    var cli = new VisitArgs();
-    function proxy() {
-      var argv = minimist.apply(minimist, arguments);
-      cli.visit(app, argv, {toBoolean: true});
-      return argv;
-    }
-
-    forward(proxy, minimist);
-    for (var key in cli) {
-      var val = cli[key];
-
-      if (typeof val === 'function') {
-        proxy[key] = (function (v) {
-          return function () {
-            return v.apply(cli, arguments);
-          }
-        }(val));
-      } else {
-        proxy[key] = val;
-      }
-    }
-    return proxy;
-  }
-  return visitor;
+  var visitArgs = new VisitArgs();
+  return function (cli) {
+    return function (argv, next) {
+      visitArgs.visit((app || {}), argv, {toBoolean: true});
+      next(null, argv);
+    };
+  };
 }
 
-toMethods.namespace = function(name, app, mm) {
-  if (typeof mm === 'function') {
-    return visitor(mm);
+toMethods.namespace = function namespace(name, app) {
+  if (typeof name !== 'string') {
+    throw new TypeError('expected `name` to be a string.');
   }
-
-  function visitor(minimist) {
-    var cli = new VisitArgs();
-    function proxy() {
-      var argv = minimist.apply(minimist, arguments);
-      cli.visit(app, argv[name], {toBoolean: true});
-      return argv;
-    }
-    forward(proxy, minimist);
-    proxy[name] = cli;
-    return proxy;
-  }
-
-  return visitor;
+  return function (cli) {
+    cli[name] = new VisitArgs();
+    return function (argv, next) {
+      cli[name].visit((app || {}), argv[name], {toBoolean: true});
+      next(null, argv);
+    };
+  };
 };
 
 /**
