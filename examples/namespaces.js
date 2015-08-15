@@ -1,43 +1,41 @@
+var plugins = require('minimist-plugins');
 var App = require('./app').App;
-var app = new App();
-var one = new App();
-var two = new App();
+var n = require('..');
 
-var minimist = require('minimist');
-var methods = require('..');
-
-var cli = require('minimist-plugins')(minimist)
+var cli = plugins(require('minimist'))
   .use(require('minimist-expand'))
-  .use(require('minimist-events'))
-  .use(methods(app))
-  .use(methods('one', one))
-  .use(methods('two', two));
+  .use(require('minimist-events')())
+  .use(n('foo', new App()))
+  .use(n('bar', new App()))
+  .use(n('baz', new App()))
 
-// set
-cli.on('set', console.log.bind(console, '[set]'));
-cli.one.on('set', console.log.bind(console, '[one.set]'));
-cli.two.on('set', console.log.bind(console, '[two.set]'));
+cli.foo.on('set', function () {
+  console.log('[foo] set', arguments);
+});
 
-// get
-cli.on('get', console.log.bind(console, '[get]'));
-cli.one.on('get', console.log.bind(console, '[one.get]'));
-cli.two.on('get', console.log.bind(console, '[two.get]'));
+cli.bar.on('set', function () {
+  console.log('[bar] set', arguments);
+});
 
-cli.on('end', function () {
-  console.log(app.cache);
+cli.baz.on('set', function () {
+  console.log('[baz] set', arguments);
+});
+
+cli.baz.on('get', function () {
+  console.log('[baz] get', arguments);
 });
 
 var args = process.argv.slice(2);
-var argv = cli(args.length ? args : [
-  '--set=w:x,y,z',
-  '--one.set=a:b|c:d|e:f',
-  '--two.set=g.h.i.j:k',
-  '--get=w',
-  '--one.get=a',
-  '--two.get=g',
-]);
+if (!args.length) {
+  args =  [
+    '--foo.set=a:b',
+    '--bar.set=c:d',
+    '--baz.set=e:f+g:h+i:j',
+    '--baz.get=a',
+  ];
+}
 
-console.log(argv);
-console.log(app);
-console.log(one);
-console.log(two);
+cli.parse(args, function (err, res) {
+  console.log(res);
+});
+

@@ -1,10 +1,11 @@
+var plugins = require('minimist-plugins');
 var app = require('./app');
 
-// turtles...
-var minimist = require('minimist');
-var expand = require('minimist-expand')(minimist);
-var events = require('minimist-events')(expand);
-var cli = require('..')(app, events);
+var cli = plugins(require('minimist'))
+  .use(require('minimist-events')())
+  .use(require('minimist-expand'))
+  .use(require('..')(app))
+
 
 cli.on('option', function (key, val) {
   console.log('option', key, val);
@@ -26,14 +27,12 @@ cli.on('_', function (val) {
   cli.emit('task', val);
 });
 
-// cli.on('*', function (key, value) {
-//   console.log(key, value);
-// });
-
 var args = process.argv.slice(2);
+if (!args.length) {
+  args =  ['--set=a:b', '--set=c:d', '--get=a', '--del=a', '--set=e:f+g:h+i:j'];
+}
 
-cli(args.length ? args : ['--set=a:b', '--set=c:d', '--get=a', '--del=a', '--set=e:f+g:h+i:j'], {
-  alias: {s: 'set'}
+cli.parse(args, {alias: {s: 'set'}}, function (err, argv) {
+  console.log(argv);
+  console.log(app.cache);
 });
-
-console.log(app.cache);
