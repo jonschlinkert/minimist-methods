@@ -1,7 +1,7 @@
 {
   "name": "minimist-methods",
   "description": "Map your node.js application's methods to command line arguments.",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "homepage": "https://github.com/jonschlinkert/minimist-methods",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "jonschlinkert/minimist-methods",
@@ -20,17 +20,16 @@
     "test": "mocha"
   },
   "dependencies": {
-    "forward-object": "^0.1.0",
     "visit-args": "^0.1.0"
   },
   "devDependencies": {
     "collection-visit": "^0.1.1",
     "minimist": "^1.1.3",
-    "minimist-events": "^0.2.1",
-    "minimist-expand": "^0.2.0",
-    "minimist-plugins": "^0.2.0",
-    "mocha": "^2.2.5",
-    "should": "^7.0.2"
+    "minimist-events": "^0.2.2",
+    "minimist-expand": "^0.3.0",
+    "minimist-plugins": "^0.3.0",
+    "mocha": "*",
+    "should": "*"
   },
   "keywords": [
     "args",
